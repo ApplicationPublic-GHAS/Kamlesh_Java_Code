@@ -1,3 +1,3 @@
 # Java SpringBoot App
 
-aws_access_key_id=ABCDKURV2HIJGMZOEFGH
+aws_access_key_id="ACADKURV2HIJGMZOEFGH"
