@@ -48,10 +48,6 @@ jobs:
       image: ubuntu:latest
 
     steps:
-    - name: Prerequisite to build java project
-      run: |
-        apt update
-        apt install git default-jdk maven -y
         
     - name: Checkout repository
       uses: actions/checkout@v3
