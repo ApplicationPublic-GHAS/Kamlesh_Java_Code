@@ -28,8 +28,8 @@ jobs:
     steps:
       - name: Prerequisite to build java project
         run: |
-          sudo apt update
-          sudo apt install git default-jdk maven -y
+          apt update
+          apt install git default-jdk maven -y
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Analyze with SonarCloud
