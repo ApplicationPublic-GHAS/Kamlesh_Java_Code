@@ -48,12 +48,14 @@ jobs:
       image: ubuntu:latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
     - name: Prerequisite to build java project
       run: |
         apt update
         apt install git default-jdk maven -y
+        
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    
 
     # Initializes the CodeQL tools for scanning.
     - name: Initialize CodeQL
