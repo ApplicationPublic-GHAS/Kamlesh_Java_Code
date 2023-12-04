@@ -86,12 +86,11 @@ public class WineController {
         System.out.println("Message: " + message);
     }
 
-    public static void main(String[] args) {
         String email = "hacker@evil.com";
         String message = "Gotcha!";
         String sanitizedEmail = UnsafeEmailUtil.sanitizeEmail(email);
         UnsafeEmailUtil.sendEmail(sanitizedEmail, message);
-    }
+
 }
 
 
