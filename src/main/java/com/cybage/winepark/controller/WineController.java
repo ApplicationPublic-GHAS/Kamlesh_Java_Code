@@ -86,10 +86,6 @@ public class WineController {
         System.out.println("Message: " + message);
     }
 
-        String email = "hacker@evil.com";
-        String message = "Gotcha!";
-        String sanitizedEmail = UnsafeEmailUtil.sanitizeEmail(email);
-        UnsafeEmailUtil.sendEmail(sanitizedEmail, message);
 
 }
 
