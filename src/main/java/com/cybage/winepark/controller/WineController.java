@@ -35,12 +35,22 @@ public class WineController {
         return new ResponseEntity<>(wines, HttpStatus.OK);
     }
 
+    // @GetMapping("getWineById/{id}")
+    // public  ResponseEntity<Wine> getWineById(@PathVariable("id") Integer id) {
+    //     log.info("CONTROLLER: getWineById");
+    //     Wine wine = wineService.getWineById(id);
+    //     return new ResponseEntity<>(wine,HttpStatus.OK);
+    // }
     @GetMapping("getWineById/{id}")
     public  ResponseEntity<Wine> getWineById(@PathVariable("id") Integer id) {
         log.info("CONTROLLER: getWineById");
+        // WARNING: The following line is vulnerable to SQL injection
+        String query = "SELECT * FROM wines WHERE id = " + id;
+        // Execute the query...
         Wine wine = wineService.getWineById(id);
-        return new ResponseEntity<>(wine,HttpStatus.OK);
+        return new ResponseEntity<>(wine, HttpStatus.OK);
     }
+
 
     @PostMapping("add")
     public  ResponseEntity<String> addWine(@RequestBody WineDto wineDto) {
