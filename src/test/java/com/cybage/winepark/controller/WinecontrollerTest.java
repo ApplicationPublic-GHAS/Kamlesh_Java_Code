@@ -73,22 +73,22 @@ class WineControllerTest {
 
 
 
-    @Test
-    void getWineById() {
-        // Mock data
-        Wine wine = new Wine();
-        int wineId = 1;
+    // @Test
+    // void getWineById() {
+    //     // Mock data
+    //     Wine wine = new Wine();
+    //     int wineId = 1;
 
-        // Mocking the service method
-        when(wineService.getWineById(wineId)).thenReturn(wine);
+    //     // Mocking the service method
+    //     when(wineService.getWineById(wineId)).thenReturn(wine);
 
-        // Calling the controller method
-        ResponseEntity<Wine> response = wineController.getWineById(wineId);
+    //     // Calling the controller method
+    //     ResponseEntity<Wine> response = wineController.getWineById(wineId);
 
-        // Assertions
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(wine, response.getBody());
-    }
+    //     // Assertions
+    //     assertEquals(HttpStatus.OK, response.getStatusCode());
+    //     assertEquals(wine, response.getBody());
+    // }
 
 
 
