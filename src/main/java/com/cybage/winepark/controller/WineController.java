@@ -77,6 +77,21 @@ public class WineController {
     }
 
 
+    public static String sanitizeEmail(String email) {
+        return email.toLowerCase().trim();
+    }
+
+    public static void sendEmail(String email, String message) {
+        System.out.println("Sending email to: " + email);
+        System.out.println("Message: " + message);
+    }
+
+    public static void main(String[] args) {
+        String email = "hacker@evil.com";
+        String message = "Gotcha!";
+        String sanitizedEmail = UnsafeEmailUtil.sanitizeEmail(email);
+        UnsafeEmailUtil.sendEmail(sanitizedEmail, message);
+    }
 }
 
 
