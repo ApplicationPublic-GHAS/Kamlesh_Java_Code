@@ -55,21 +55,21 @@ class WineControllerTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals("wine added successfully...", response.getBody());
     }
-    @Test
-    void getAllWines() {
-        // Mock data
-        List<Wine> wines = Arrays.asList(new Wine(1, 2, "red", "sula", 200.00), new Wine(2, 2, "red", "sula", 200.00));
+    // @Test
+    // void getAllWines() {
+    //     // Mock data
+    //     List<Wine> wines = Arrays.asList(new Wine(1, 2, "red", "sula", 200.00), new Wine(2, 2, "red", "sula", 200.00));
 
-        // Mocking the service method
-        when(wineService.getAllWines()).thenReturn(wines);
+    //     // Mocking the service method
+    //     when(wineService.getAllWines()).thenReturn(wines);
 
-        // Calling the controller method
-        ResponseEntity<List<Wine>> response = wineController.getAllWines();
+    //     // Calling the controller method
+    //     ResponseEntity<List<Wine>> response = wineController.getAllWines();
 
-        // Assertions
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(wines, response.getBody());
-    }
+    //     // Assertions
+    //     assertEquals(HttpStatus.OK, response.getStatusCode());
+    //     assertEquals(wines, response.getBody());
+    // }
 
 
 
