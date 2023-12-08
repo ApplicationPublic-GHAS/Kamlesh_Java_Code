@@ -38,7 +38,7 @@ phases:
     on-failure: ABORT
     commands:
       - trivy fs . -f sarif -o trivy-report.sarif
-      - SARIF_DATA=$(gzip -c analysis-data.sarif | base64 -w0)
+      - SARIF_DATA=$(gzip -c trivy-report.sarif | base64 -w0)
       - echo $GITHUB_TOKEN,$OWNER,$REPO,$COMMIT_SHA
       - |
         curl -L \
