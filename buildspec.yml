@@ -1,0 +1,44 @@
+version: 0.2
+
+env:
+  parameter-store:
+    DB_URL: "/wine/$env/db_url"
+    DB_USERNAME: "/wine/$env/db_username"
+    DB_PASSWORD: "/wine/$env/db_password"
+    SONAR_TOKEN: "/wine/$env/sonar_token"
+    
+phases:
+  pre_build:
+    commands:
+      - sudo apt-get install wget apt-transport-https gnupg lsb-release
+      - wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | gpg --dearmor | sudo tee /usr/share/keyrings/trivy.gpg > /dev/null
+      - echo "deb [signed-by=/usr/share/keyrings/trivy.gpg] https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main" | sudo tee -a /etc/apt/sources.list.d/trivy.list
+      - sudo apt-get update
+      - sudo apt-get install trivy
+      - echo "Trivy version:" && trivy --version
+
+  install:
+    runtime-versions:
+      java: corretto17
+ 
+  build:
+    on-failure: ABORT
+    commands:
+      - mvn verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=kamleshw_java-app -Dsonar.token=$SONAR_TOKEN -Ddb.url=$DB_URL -Ddb.username=$DB_USERNAME -Ddb.password=$DB_PASSWORD
+      - QUALITY_GATE_STATUS=$(curl -s -u "$SONAR_TOKEN:" "https://sonarcloud.io/api/qualitygates/project_status?projectKey=kamleshw_java-app" | jq -r .projectStatus.status)
+      - if [ "$QUALITY_GATE_STATUS" != "OK" ]; then exit 1; fi
+  
+      
+  post_build:
+    on-failure: ABORT
+    commands:
+      - trivy fs . -f sarif -o trivy-report.sarif
+      - codeql github upload-results --repository=ApplicationPublic-GHAS/Kamlesh_Java_Code --ref=refs/heads/feature1 --commit=ac6a45bc082fdd9952e0dd20282a418255e61af5 --sarif=trivy-report.sarif
+artifacts:
+  files:
+    - target/*.jar
+    - scripts/*.sh
+    - appspec.yml
+    - trivy-report.sarif
+    - target/site/jacoco/index.html
+  discard-paths: yes
