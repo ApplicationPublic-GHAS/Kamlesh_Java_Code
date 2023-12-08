@@ -38,6 +38,8 @@ phases:
     on-failure: ABORT
     commands:
       - trivy fs . -f sarif -o trivy-report.sarif
+      - SARIF_DATA=$(gzip -c analysis-data.sarif | base64 -w0)
+      - echo $GITHUB_TOKEN,$OWNER,$REPO,$COMMIT_SHA
       - |
         curl -L \
           -X POST \
@@ -45,7 +47,7 @@ phases:
           -H "Authorization: Bearer $GITHUB_TOKEN" \
           -H "X-GitHub-Api-Version: 2022-11-28" \
           https://api.github.com/repos/$OWNER/$REPO/code-scanning/sarifs \
-          -d '{"commit_sha":"$COMMIT_SHA","ref":"refs/heads/$BRANCH","sarif":"./trivy-report.sarif"}'
+          -d '{"commit_sha":"$COMMIT_SHA","ref":"refs/heads/$BRANCH","sarif":"$SARIF_DATA"}'
           
 artifacts:
   files:
