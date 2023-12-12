@@ -88,7 +88,7 @@ jobs:
         touch ~/.ssh/known_hosts
         ssh-keyscan -H 54.175.130.149 >> ~/.ssh/known_hosts
         echo "${{ secrets.PEM_FILE }}" > my-key.pem
-        chmod 400 my-key.pem
+        chmod 600 my-key.pem
         ssh -i my-key.pem ubuntu@54.175.130.149 'whoami'
         shell: bash
   
