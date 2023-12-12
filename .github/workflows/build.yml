@@ -84,12 +84,9 @@ jobs:
     
     - name: SSH into EC2 and deploy Docker container
       run: |
-        mkdir -p ~/.ssh
-        touch ~/.ssh/known_hosts
-        ssh-keyscan -H 54.175.130.149 >> ~/.ssh/known_hosts
-        echo "${{ secrets.PEM_FILE }}" > my-key.pem
-        chmod 600 my-key.pem
-        ssh -i my-key.pem ubuntu@54.175.130.149 'whoami'
+        echo "${{ secrets.PEM_FILE }}" > ~/.ssh/id_rsa
+        chmod 400 ~/.ssh/id_rsa
+        ssh ubuntu@100.24.41.120 'whoami'
         shell: bash
   
       
