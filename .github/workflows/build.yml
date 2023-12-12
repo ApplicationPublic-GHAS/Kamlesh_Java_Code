@@ -47,7 +47,15 @@ jobs:
         path: ~/.m2
         key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
         restore-keys: ${{ runner.os }}-m2
- 
+        
+    - name: Cache Docker layers
+      id: docker-cache
+      uses: actions/cache@vv3.3.2
+      with:
+        path: |
+          /var/lib/docker
+        key: ${{ runner.os }}-${{ hashFiles('**/*.lock') }}
+        
     - name: Build and analyze
       run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }}
       env:
@@ -76,6 +84,7 @@ jobs:
     
     - name: SSH into EC2 and deploy Docker container
       run: |
+        touch /home/runner/.ssh/id_rsa
         echo "${{ secrets.PEM_FILE }}" >> /home/runner/.ssh/id_rsa
         ssh ubuntu@54.175.130.149 'sudo docker run -d -p 8080:8080 --name java-app $REGISTRY/$REPOSITORY:$IMAGE_TAG'
   
