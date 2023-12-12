@@ -50,7 +50,7 @@ jobs:
         
     - name: Cache Docker layers
       id: docker-cache
-      uses: actions/cache@vv3.3.2
+      uses: actions/cache@v3.3.2
       with:
         path: |
           /var/lib/docker
