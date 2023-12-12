@@ -85,7 +85,7 @@ jobs:
     - name: SSH into EC2 and deploy Docker container
       run: |
         mkdir -p ~/.ssh
-        sudo echo "${{ secrets.PEM_FILE }}" > ~/.ssh/id_rsa
+        sudo echo ${{ secrets.PEM_FILE }} > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
         ssh -i ~/.ssh/id_rsa ubuntu@100.24.41.120 'whoami'
         shell: bash
