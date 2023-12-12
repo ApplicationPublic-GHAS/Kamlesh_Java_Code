@@ -77,8 +77,8 @@ jobs:
     - name: SSH into EC2 and deploy Docker container
       run: |
         echo "${{ secrets.PEM_FILE }}" > my-key.pem
-        chmod 400 my-key.pem
-        ssh -i my-key.pem ubuntu@ec2-54-175-130-149.compute-1.amazonaws.com 'sudo apt update && sudo apt install -y default-jre docker.io && sudo docker run -d -p 8080:8080 --name java-app $REGISTRY/$REPOSITORY:$IMAGE_TAG'
+        chmod 777 my-key.pem
+        ssh -i my-key.pem root@ec2-54-175-130-149.compute-1.amazonaws.com 'sudo apt update && sudo apt install -y default-jre docker.io && sudo docker run -d -p 8080:8080 --name java-app $REGISTRY/$REPOSITORY:$IMAGE_TAG'
       shell: bash
   
       
