@@ -76,7 +76,7 @@ jobs:
     
     - name: SSH into EC2 and deploy Docker container
       run: |
-        echo "${{ secrets.PEM_FILE }}" >> ~/.ssh/id_rsa
+        echo "${{ secrets.PEM_FILE }}" >> /home/runner/.ssh/id_rsa
         ssh ubuntu@54.175.130.149 'sudo docker run -d -p 8080:8080 --name java-app $REGISTRY/$REPOSITORY:$IMAGE_TAG'
   
       
