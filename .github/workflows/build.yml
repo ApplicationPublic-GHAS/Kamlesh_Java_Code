@@ -90,7 +90,7 @@ jobs:
         IMAGE_TAG: ${{ github.sha }}
         IMAGE_REF: $REGISTRY/$REPOSITORY:$IMAGE_TAG
       with:
-        image-ref: '$IMAGE_REF'
+        image-ref: $IMAGE_REF
         format: 'table'
         exit-code: '1'
         ignore-unfixed: true
