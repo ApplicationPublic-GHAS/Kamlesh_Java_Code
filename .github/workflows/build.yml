@@ -97,6 +97,7 @@ jobs:
         REPOSITORY: ${{ secrets.ECR_REPO_NAME }}
         IMAGE_TAG: ${{ github.sha }}
       run: |
+        printenv
         mkdir ~/.ssh
         echo "${{ secrets.PEM_FILE }}" > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
