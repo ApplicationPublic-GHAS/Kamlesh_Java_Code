@@ -83,6 +83,10 @@ jobs:
         docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
     
     - name: SSH into EC2 and deploy Docker container 
+      env:
+          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          REPOSITORY: ${{ secrets.ECR_REPO_NAME }}
+          IMAGE_TAG: ${{ github.sha }}
       run: |
         mkdir ~/.ssh
         echo "${{ secrets.PEM_FILE }}" > ~/.ssh/id_rsa
