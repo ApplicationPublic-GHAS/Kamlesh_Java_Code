@@ -104,7 +104,13 @@ jobs:
         ssh-keyscan -t rsa ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
         ssh ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} "
         aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin $REGISTRY
-        docker run -d -p ${{ secrets.CONTAINER_PORT_MAPPING }} --name "${{ secrets.CONTAINER_NAME }}-$GITHUB_RUN_NUMBER" $REGISTRY/$REPOSITORY:$IMAGE_TAG
+        if docker ps -q --filter "name=java-app" 2>/dev/null; then
+            docker stop java-app
+            docker rm java-app
+            docker run -d -p ${{ secrets.CONTAINER_PORT_MAPPING }} --name "${{ secrets.CONTAINER_NAME }}" $REGISTRY/$REPOSITORY:$IMAGE_TAG
+        else
+            docker run -d -p ${{ secrets.CONTAINER_PORT_MAPPING }} --name "${{ secrets.CONTAINER_NAME }}" $REGISTRY/$REPOSITORY:$IMAGE_TAG
+        fi     
         "
   
       
