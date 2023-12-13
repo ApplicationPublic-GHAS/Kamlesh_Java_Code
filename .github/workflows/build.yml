@@ -17,10 +17,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-      REPOSITORY: ${{ secrets.ECR_REPO_NAME }}
-      IMAGE_TAG: ${{ github.sha }}
     permissions:
       id-token: write
       contents: read
@@ -78,11 +74,19 @@ jobs:
       uses: aws-actions/amazon-ecr-login@v2
 
     - name: Build, tag, and push docker image to Amazon ECR
+      env:
+        REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        REPOSITORY: ${{ secrets.ECR_REPO_NAME }}
+        IMAGE_TAG: ${{ github.sha }}
       run: |
         docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
         docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
     
-    - name: SSH into EC2 and deploy Docker container 
+    - name: SSH into EC2 and deploy Docker container
+      env:
+        REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        REPOSITORY: ${{ secrets.ECR_REPO_NAME }}
+        IMAGE_TAG: ${{ github.sha }}
       run: |
         mkdir ~/.ssh
         echo "${{ secrets.PEM_FILE }}" > ~/.ssh/id_rsa
