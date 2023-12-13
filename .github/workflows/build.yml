@@ -89,7 +89,7 @@ jobs:
         REPOSITORY: ${{ secrets.ECR_REPO_NAME }}
         IMAGE_TAG: ${{ github.sha }}
       with:
-        image-ref: '$REGISTRY/$REPOSITORY:$IMAGE_TAG'
+        image-ref: "$REGISTRY/$REPOSITORY:$IMAGE_TAG"
         format: 'table'
         exit-code: '1'
         ignore-unfixed: true
