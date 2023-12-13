@@ -1,0 +1,34 @@
+name: Deploy Docker Image to EC2
+
+on:
+  workflow_run:
+    workflows: ["Build and Push Docker Image"]
+    types:
+      - completed
+
+jobs:
+  deploy-to-ec2:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: SSH into EC2 and deploy Docker container
+      env:
+        REGISTRY: ${{ needs.build.outputs.REGISTRY }}
+        REPOSITORY: ${{ secrets.ECR_REPO_NAME }}
+        IMAGE_TAG: ${{ github.sha }}
+      run: |
+        printenv
+        mkdir ~/.ssh
+        echo "${{ secrets.PEM_FILE }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan -t rsa ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+        ssh ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} "
+        aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin $REGISTRY
+        if docker ps -q --filter "name=${{ secrets.CONTAINER_NAME }}" 2>/dev/null ; then
+          docker stop "${{ secrets.CONTAINER_NAME }}"
+          docker rm "${{ secrets.CONTAINER_NAME }}"
+          docker run -d -p "${{ secrets.CONTAINER_PORT_MAPPING }}" --name "${{ secrets.CONTAINER_NAME }}" "$REGISTRY/$REPOSITORY:$IMAGE_TAG"
+        else
+          docker run -d -p "${{ secrets.CONTAINER_PORT_MAPPING }}" --name "${{ secrets.CONTAINER_NAME }}" "$REGISTRY/$REPOSITORY:$IMAGE_TAG"
+        fi     
+        "
