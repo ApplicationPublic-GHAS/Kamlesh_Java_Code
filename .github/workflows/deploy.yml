@@ -11,17 +11,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Download artifact
-      uses: actions/download-artifact@v2.1.1
-      with:
-        name: shared-artifact
+    # - name: Download artifact
+    #   uses: actions/download-artifact@v2.1.1
+    #   with:
+    #     name: shared-artifact
         
-    - name: Source the variable file
-      run: source variable.sh
+    # - name: Source the variable file
+    #   run: source variable.sh
 
     - name: SSH into EC2 and deploy Docker container
       env:
-        REGISTRY: ${{ needs.build.outputs.REGISTRY }}
+        REGISTRY: "031251409634.dkr.ecr.us-east-1.amazonaws.com"
         REPOSITORY: ${{ secrets.ECR_REPO_NAME }}
         IMAGE_TAG: ${{ github.sha }}
       run: |
