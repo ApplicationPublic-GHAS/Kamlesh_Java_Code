@@ -90,7 +90,16 @@ jobs:
         ignore-unfixed: true
         vuln-type: 'os,library'
         severity: 'CRITICAL,HIGH'
-        
+
+    - name: Save variable to file
+      run: echo "export REGISTRY=${{ steps.login-ecr.outputs.registry }}" > variable.sh
+      
+    - name: Upload artifact
+      uses: actions/upload-artifact@v3.1.3
+      with:
+        name: shared-artifact
+        path: variable.sh
+
     # - name: SSH into EC2 and deploy Docker container
     #   env:
     #     REGISTRY: ${{ steps.login-ecr.outputs.registry }}
