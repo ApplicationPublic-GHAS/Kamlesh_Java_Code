@@ -90,6 +90,9 @@ jobs:
         ignore-unfixed: true
         vuln-type: 'os,library'
         severity: 'CRITICAL,HIGH'
+
+    - name: Variable Registry
+      run: export REGISTRY=${{ steps.login-ecr.outputs.registry }}
           
     # - name: Save variable to file
     #   run: echo "export REGISTRY=${{ steps.login-ecr.outputs.registry }}" > variable.sh
