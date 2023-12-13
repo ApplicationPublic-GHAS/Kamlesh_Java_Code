@@ -82,7 +82,7 @@ jobs:
         docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
         docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
     
-    - name: SSH into EC2 and deploy Docker container
+    - name: SSH into EC2 and deploy Docker container 
       run: |
         mkdir ~/.ssh
         echo "${{ secrets.PEM_FILE }}" > ~/.ssh/id_rsa
