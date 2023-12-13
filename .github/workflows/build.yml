@@ -88,8 +88,9 @@ jobs:
         REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         REPOSITORY: ${{ secrets.ECR_REPO_NAME }}
         IMAGE_TAG: ${{ github.sha }}
+        IMAGE_REF: $REGISTRY/$REPOSITORY:$IMAGE_TAG
       with:
-        image-ref: '${REGISTRY}/${REPOSITORY}:${IMAGE_TAG}'
+        image-ref: '${IMAGE_REF}'
         format: 'table'
         exit-code: '1'
         ignore-unfixed: true
