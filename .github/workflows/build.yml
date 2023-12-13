@@ -104,7 +104,7 @@ jobs:
         ssh-keyscan -t rsa ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
         ssh ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} "
         aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin $REGISTRY
-        docker run -d -p ${{ secrets.CONTAINER_PORT_MAPPING }} --name "${{ secrets.CONTAINER_NAME }}-$GITHUB_RUN_NUMBER=72" $REGISTRY/$REPOSITORY:$IMAGE_TAG
+        docker run -d -p ${{ secrets.CONTAINER_PORT_MAPPING }} --name "${{ secrets.CONTAINER_NAME }}-$GITHUB_RUN_NUMBER" $REGISTRY/$REPOSITORY:$IMAGE_TAG
         "
   
       
