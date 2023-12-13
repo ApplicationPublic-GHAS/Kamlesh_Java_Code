@@ -11,6 +11,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Download artifact
+      uses: actions/download-artifact@v2
+      with:
+        name: shared-artifact
+        
+    - name: Source the variable file
+      run: source variable.sh
+
     - name: SSH into EC2 and deploy Docker container
       env:
         REGISTRY: ${{ needs.build.outputs.REGISTRY }}
