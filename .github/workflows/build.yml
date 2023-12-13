@@ -84,13 +84,8 @@ jobs:
 
     - name: Run Trivy vulnerability scanner
       uses: aquasecurity/trivy-action@master
-      env:
-        REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        REPOSITORY: ${{ secrets.ECR_REPO_NAME }}
-        IMAGE_TAG: ${{ github.sha }}
-        IMAGE_REF: $REGISTRY/$REPOSITORY:$IMAGE_TAG
       with:
-        image-ref: $IMAGE_REF
+        image-ref: '${{ steps.login-ecr.outputs.registry }}/${{ secrets.ECR_REPO_NAME }}:${{ github.sha }}'
         format: 'table'
         exit-code: '1'
         ignore-unfixed: true
