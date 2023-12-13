@@ -88,6 +88,7 @@ jobs:
         echo "${{ secrets.PEM_FILE }}" > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
         ssh-keyscan -t rsa 100.24.41.120 >> ~/.ssh/known_hosts
+        printenv
         ssh ubuntu@100.24.41.120 'sudo docker run -d -p 8080:8080 --name java-app $REGISTRY/$REPOSITORY:$IMAGE_TAG'
   
       
