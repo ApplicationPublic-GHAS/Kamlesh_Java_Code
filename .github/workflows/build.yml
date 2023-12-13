@@ -92,6 +92,5 @@ jobs:
         ssh-add ~/.ssh/id_rsa
         ssh-keyscan -t rsa 100.24.41.120 >> ~/.ssh/known_hosts
         ssh ubuntu@100.24.41.120 'whoami'
-        shell: bash
   
       
