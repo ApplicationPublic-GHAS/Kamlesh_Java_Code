@@ -21,7 +21,7 @@ jobs:
 
     - name: SSH into EC2 and deploy Docker container
       env:
-        REGISTRY: "031251409634.dkr.ecr.us-east-1.amazonaws.com"
+        REGISTRY: $REGISTRY
         REPOSITORY: ${{ secrets.ECR_REPO_NAME }}
         IMAGE_TAG: ${{ github.sha }}
       run: |
