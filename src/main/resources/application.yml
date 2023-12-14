@@ -2,7 +2,7 @@
   spring:
    datasource:
      driver-class-name: com.mysql.cj.jdbc.Driver
-     url: jdbc:mysql://$MYSQL_HOST_WITH_PORT/DB_NAME
+     url: jdbc:mysql://$MYSQL_HOST_WITH_PORT/$MYSQL_DB_NAME
      username: $MYSQL_USER
      password: $MYSQL_PASSWORD
    jpa:
