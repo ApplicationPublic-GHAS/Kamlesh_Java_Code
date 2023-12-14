@@ -104,10 +104,10 @@ jobs:
           docker stop "${{ secrets.CONTAINER_NAME }}"
           docker rm "${{ secrets.CONTAINER_NAME }}"
           docker run -d -p "${{ secrets.CONTAINER_PORT_MAPPING }}" --name "${{ secrets.CONTAINER_NAME }}" "$REGISTRY/$REPOSITORY:$IMAGE_TAG"
-          aws ecr batch-delete-image --repository-name $REPOSITORY --image-ids imageTag=$IMAGE_TAG
+          aws ecr batch-delete-image --region ${{ secrets.AWS_REGION }} --repository-name $REPOSITORY --image-ids imageTag=$IMAGE_TAG
         else
           docker run -d -p "${{ secrets.CONTAINER_PORT_MAPPING }}" --name "${{ secrets.CONTAINER_NAME }}" "$REGISTRY/$REPOSITORY:$IMAGE_TAG"
-          aws ecr batch-delete-image --repository-name $REPOSITORY --image-ids imageTag=$IMAGE_TAG
+          aws ecr batch-delete-image --region ${{ secrets.AWS_REGION }} --repository-name $REPOSITORY --image-ids imageTag=$IMAGE_TAG
         fi     
         "
 
