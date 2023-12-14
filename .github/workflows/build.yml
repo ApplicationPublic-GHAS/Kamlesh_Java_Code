@@ -20,7 +20,12 @@ jobs:
     permissions:
       id-token: write
       contents: read
-
+    env:
+      MYSQL_HOST_WITH_PORT: ${{ secrets.MYSQL_HOST_WITH_PORT }}
+      MYSQL_DB_NAME: ${{ secrets.MYSQL_DB_NAME }}
+      MYSQL_USER: ${{ secrets.MYSQL_USER }}
+      MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+    
     steps:
     - name: Checkout Code
       uses: actions/checkout@v4.1.1
@@ -62,7 +67,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-        
+                
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v4
       with:
@@ -91,39 +96,28 @@ jobs:
         vuln-type: 'os,library'
         severity: 'CRITICAL,HIGH'
 
-    - name: Variable Registry
-      run: export REGISTRY=${{ steps.login-ecr.outputs.registry }}
-          
-    # - name: Save variable to file
-    #   run: echo "export REGISTRY=${{ steps.login-ecr.outputs.registry }}" > variable.sh
-      
-    # - name: Upload artifact
-    #   uses: actions/upload-artifact@v3.1.3
-    #   with:
-    #     name: shared-artifact
-    #     path: variable.sh
-
-    # - name: SSH into EC2 and deploy Docker container
-    #   env:
-    #     REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-    #     REPOSITORY: ${{ secrets.ECR_REPO_NAME }}
-    #     IMAGE_TAG: ${{ github.sha }}
-    #   run: |
-    #     printenv
-    #     mkdir ~/.ssh
-    #     echo "${{ secrets.PEM_FILE }}" > ~/.ssh/id_rsa
-    #     chmod 600 ~/.ssh/id_rsa
-    #     ssh-keyscan -t rsa ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
-    #     ssh ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} "
-    #     aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin $REGISTRY
-    #     if docker ps -q --filter "name=${{ secrets.CONTAINER_NAME }}" 2>/dev/null ; then
-    #       docker stop "${{ secrets.CONTAINER_NAME }}"
-    #       docker rm "${{ secrets.CONTAINER_NAME }}"
-    #       docker run -d -p "${{ secrets.CONTAINER_PORT_MAPPING }}" --name "${{ secrets.CONTAINER_NAME }}" "$REGISTRY/$REPOSITORY:$IMAGE_TAG"
-    #     else
-    #       docker run -d -p "${{ secrets.CONTAINER_PORT_MAPPING }}" --name "${{ secrets.CONTAINER_NAME }}" "$REGISTRY/$REPOSITORY:$IMAGE_TAG"
-    #     fi     
-    #     "
+    - name: SSH into EC2 and deploy Docker container
+      env:
+        REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        REPOSITORY: ${{ secrets.ECR_REPO_NAME }}
+        IMAGE_TAG: ${{ github.sha }}
+      run: |
+        mkdir ~/.ssh
+        echo "${{ secrets.PEM_FILE }}" > ~/.ssh/id_rsa
+        # chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan -t rsa ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+        ssh ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} "
+        aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin $REGISTRY
+        if docker ps -q --filter "name=${{ secrets.CONTAINER_NAME }}" 2>/dev/null ; then
+          docker stop "${{ secrets.CONTAINER_NAME }}"
+          docker rm "${{ secrets.CONTAINER_NAME }}"
+          docker run -d -p "${{ secrets.CONTAINER_PORT_MAPPING }}" --name "${{ secrets.CONTAINER_NAME }}" "$REGISTRY/$REPOSITORY:$IMAGE_TAG"
+          aws ecr batch-delete-image --repository-name $REPOSITORY --image-ids imageTag=$IMAGE_TAG
+        else
+          docker run -d -p "${{ secrets.CONTAINER_PORT_MAPPING }}" --name "${{ secrets.CONTAINER_NAME }}" "$REGISTRY/$REPOSITORY:$IMAGE_TAG"
+          aws ecr batch-delete-image --repository-name $REPOSITORY --image-ids imageTag=$IMAGE_TAG
+        fi     
+        "
 
   
       
