@@ -54,7 +54,9 @@ jobs:
     #     key: ${{ runner.os }}-${{ hashFiles('**/*.lock') }}
         
     - name: Build and analyze
-      run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }}
+      run: |
+        mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }}
+        if [ "$QUALITY_GATE_STATUS" != "OK" ]; then exit 1; fi
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
