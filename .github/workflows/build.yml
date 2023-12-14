@@ -76,7 +76,7 @@ jobs:
         REPOSITORY: ${{ secrets.ECR_REPO_NAME }}
         IMAGE_TAG: ${{ github.sha }}
       run: |
-        docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
+        docker build --build-arg MYSQL_HOST_WITH_PORT=$MYSQL_HOST_WITH_PORT MYSQL_DB_NAME=$MYSQL_DB_NAME MYSQL_USER=$MYSQL_USER MYSQL_PASSWORD=$MYSQL_PASSWORD -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
         docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
 
     - name: Run Trivy vulnerability scanner
