@@ -35,6 +35,7 @@ jobs:
         SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY }}
 
     - name: SonarQube Quality Gate Check
+      id: quality-gate-check
       uses: SonarSource/sonarqube-quality-gate-action@v1.1.0
       with:
         scanMetadataReportFile: target/sonar/report-task.txt
