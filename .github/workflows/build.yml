@@ -44,7 +44,10 @@ jobs:
 
     - name: Add Quality gate status to summary
       run: |
-        echo "Quality gate status = ${{ steps.quality-gate-check.outputs.quality-gate-status }}" >> $GITHUB_STEP_SUMMARY
+        echo "##[group]JaCoCo Code Coverage"
+        cat target/site/jacoco/index.html
+        echo "##[endgroup]"
+        # echo "Quality gate status = ${{ steps.quality-gate-check.outputs.quality-gate-status }}" >> $GITHUB_STEP_SUMMARY
       
                 
     - name: Configure AWS credentials
