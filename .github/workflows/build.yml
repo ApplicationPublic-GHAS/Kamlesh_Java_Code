@@ -31,7 +31,7 @@ jobs:
         echo QUALITY_GATE_STATUS=$(curl -s -u "$SONAR_TOKEN:" "$SONAR_HOST_URL/api/qualitygates/project_status?projectKey=$SONAR_PROJECT_KEY" | jq -r .projectStatus.status)
         echo $QUALITY_GATE_STATUS
         if "$QUALITY_GATE_STATUS" != "OK" ; then exit 1; fi
-        echo '[![Quality gate]$(curl http://35.224.41.103:9000/api/project_badges/quality_gate?project=java-app&token=sqb_9c7033c03802e15946ed6f32f7cbc2b2ce284a24)](http://35.224.41.103:9000/dashboard?id=java-app)' >> $GITHUB_STEP_SUMMARY
+        echo "[![Quality gate](http://35.224.41.103:9000/api/project_badges/quality_gate?project=java-app&token=sqb_9c7033c03802e15946ed6f32f7cbc2b2ce284a24)](http://35.224.41.103:9000/dashboard?id=java-app)" >> $GITHUB_STEP_SUMMARY
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
