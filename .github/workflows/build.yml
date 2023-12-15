@@ -46,6 +46,8 @@ jobs:
       with:
         # Location of the scanner metadata report file
         scanMetadataReportFile: target/sonar/report-task.txt
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
                 
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v4
