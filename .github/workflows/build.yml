@@ -30,33 +30,11 @@ jobs:
         java-version: '17'
         distribution: 'adopt'
         cache: maven
-        
-    # - name: Cache SonarQube packages
-    #   uses: actions/cache@v3.3.2
-    #   with:
-    #     path: ~/.sonar/cache
-    #     key: ${{ runner.os }}-sonar
-    #     restore-keys: ${{ runner.os }}-sonar
-        
-    # - name: Cache Maven packages
-    #   uses: actions/cache@v3.3.2
-    #   with:
-    #     path: ~/.m2
-    #     key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-    #     restore-keys: ${{ runner.os }}-m2
-        
-    # - name: Cache Docker layers
-    #   id: docker-cache
-    #   uses: actions/cache@v3.3.2
-    #   with:
-    #     path: |
-    #       /var/lib/docker
-    #     key: ${{ runner.os }}-${{ hashFiles('**/*.lock') }}
-        
+                
     - name: Build and analyze
       run: |
         mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }}
-        echo QUALITY_GATE_STATUS=$(curl -s -u "${{ secrets.SONAR_TOKEN }}:" "https://sonarcloud.io/api/qualitygates/project_status?projectKey=${{ secrets.SONAR_PROJECT_KEY }}" | jq -r .projectStatus.status)
+        echo QUALITY_GATE_STATUS=$(curl -s -u ${{ secrets.SONAR_TOKEN }}:https://sonarcloud.io/api/qualitygates/project_status?projectKey=${{ secrets.SONAR_PROJECT_KEY }} | jq -r .projectStatus.status)
         echo $QUALITY_GATE_STATUS
         if "$QUALITY_GATE_STATUS" != "OK" ; then exit 1; fi
       env:
