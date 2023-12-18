@@ -86,7 +86,7 @@ jobs:
     steps:
     - name: SSH into EC2 and deploy Docker container
       env:
-        REGISTRY: ${{ needs.build.outputs.ecr-registry }}
+        REGISTRY: ${{ needs.build.set-ecr-output.outputs.ecr-registry }}
         REPOSITORY: ${{ secrets.ECR_REPO_NAME }}
         IMAGE_TAG: ${{ github.sha }}
       run: |
