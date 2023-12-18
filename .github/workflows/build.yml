@@ -67,7 +67,7 @@ jobs:
       env:
         REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         REPOSITORY: ${{ secrets.ECR_REPO_NAME }}
-        IMAGE_TAG: ${GITHUB_SHA:0:7}
+        IMAGE_TAG: ${ GITHUB_SHA:0:7 }
       run: |
         docker build --build-arg MYSQL_HOST_WITH_PORT=$MYSQL_HOST_WITH_PORT --build-arg MYSQL_DB_NAME=$MYSQL_DB_NAME --build-arg MYSQL_USER=$MYSQL_USER --build-arg MYSQL_PASSWORD=$MYSQL_PASSWORD -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
         docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
@@ -89,7 +89,7 @@ jobs:
       env:
         REGISTRY: ${{ needs.build.outputs.ecr-registry }}
         REPOSITORY: ${{ secrets.ECR_REPO_NAME }}
-        IMAGE_TAG: ${{ GITHUB_SHA:0:7 }}
+        IMAGE_TAG: ${GITHUB_SHA:0:7}
       run: |
         # [ ! -d ~/.ssh ] && mkdir -p ~/.ssh && echo "Directory ~/.ssh created." || echo "Directory ~/.ssh already exists."
         echo "${{ secrets.PEM_FILE }}" > ~/.ssh/id_rsa
