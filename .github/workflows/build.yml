@@ -90,7 +90,7 @@ jobs:
         REPOSITORY: ${{ secrets.ECR_REPO_NAME }}
         IMAGE_TAG: ${{ github.sha }}
       run: |
-        [ ! -d ~/.ssh ] && mkdir -p ~/.ssh && echo "Directory ~/.ssh created." || echo "Directory ~/.ssh already exists."
+        # [ ! -d ~/.ssh ] && mkdir -p ~/.ssh && echo "Directory ~/.ssh created." || echo "Directory ~/.ssh already exists."
         echo "${{ secrets.PEM_FILE }}" > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
         ssh-keyscan -t rsa ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
