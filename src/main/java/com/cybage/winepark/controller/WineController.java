@@ -35,12 +35,22 @@ public class WineController {
         return new ResponseEntity<>(wines, HttpStatus.OK);
     }
 
+    // @GetMapping("getWineById/{id}")
+    // public  ResponseEntity<Wine> getWineById(@PathVariable("id") Integer id) {
+    //     log.info("CONTROLLER: getWineById");
+    //     Wine wine = wineService.getWineById(id);
+    //     return new ResponseEntity<>(wine,HttpStatus.OK);
+    // }
     @GetMapping("getWineById/{id}")
     public  ResponseEntity<Wine> getWineById(@PathVariable("id") Integer id) {
         log.info("CONTROLLER: getWineById");
+        // WARNING: The following line is vulnerable to SQL injection
+        String query = "SELECT * FROM wines WHERE id = " + id;
+        // Execute the query...
         Wine wine = wineService.getWineById(id);
-        return new ResponseEntity<>(wine,HttpStatus.OK);
+        return new ResponseEntity<>(wine, HttpStatus.OK);
     }
+
 
     @PostMapping("add")
     public  ResponseEntity<String> addWine(@RequestBody WineDto wineDto) {
@@ -64,6 +74,16 @@ public class WineController {
         log.info("CONTROLLER: deleteWine");
         wineService.deleteWine(id);
         return new ResponseEntity<>("wine deleted successfully...",HttpStatus.OK);
+    }
+
+
+    public static String sanitizeEmail(String email) {
+        return email.toLowerCase().trim();
+    }
+
+    public static void sendEmail(String email, String message) {
+        System.out.println("Sending email to: " + email);
+        System.out.println("Message: " + message);
     }
 
 
