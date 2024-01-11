@@ -63,14 +63,13 @@ jobs:
     #   id: ecr-registry
     #   run: echo "ecr-registry=${{ steps.login-ecr.outputs.registry }}" >> $GITHUB_OUTPUT
       
-    - name: Build, tag, and push docker image to Amazon ECR
+    - name: Build and Tag Docker Image
       env:
         REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         REPOSITORY: ${{ secrets.ECR_REPO_NAME }}
       run: |
         IMAGE_TAG=$(echo ${GITHUB_SHA} | cut -c 1-7)
         docker build --build-arg MYSQL_HOST_WITH_PORT=$MYSQL_HOST_WITH_PORT --build-arg MYSQL_DB_NAME=$MYSQL_DB_NAME --build-arg MYSQL_USER=$MYSQL_USER --build-arg MYSQL_PASSWORD=$MYSQL_PASSWORD -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
-        docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
 
     - name: Run Trivy vulnerability scanner
       uses: aquasecurity/trivy-action@master
@@ -80,6 +79,14 @@ jobs:
         ignore-unfixed: true
         vuln-type: 'os,library'
         severity: 'CRITICAL,HIGH'
+        
+    - name: Docker Push to ECR
+      env:
+        REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        REPOSITORY: ${{ secrets.ECR_REPO_NAME }}
+      run: |
+        IMAGE_TAG=$(echo ${GITHUB_SHA} | cut -c 1-7)
+        docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
 
   deploy:
     runs-on: self-hosted
