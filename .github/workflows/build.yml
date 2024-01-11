@@ -68,13 +68,14 @@ jobs:
         REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         REPOSITORY: ${{ secrets.ECR_REPO_NAME }}
       run: |
-        IMAGE_TAG=$(echo ${GITHUB_SHA} | cut -c 1-7)
-        docker build --build-arg MYSQL_HOST_WITH_PORT=$MYSQL_HOST_WITH_PORT --build-arg MYSQL_DB_NAME=$MYSQL_DB_NAME --build-arg MYSQL_USER=$MYSQL_USER --build-arg MYSQL_PASSWORD=$MYSQL_PASSWORD -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
+        # IMAGE_TAG=$(echo ${GITHUB_SHA} | cut -c 1-7)
+        docker build --build-arg MYSQL_HOST_WITH_PORT=$MYSQL_HOST_WITH_PORT --build-arg MYSQL_DB_NAME=$MYSQL_DB_NAME --build-arg MYSQL_USER=$MYSQL_USER --build-arg MYSQL_PASSWORD=$MYSQL_PASSWORD -t $REGISTRY/$REPOSITORY:${GITHUB_SHA} .
 
     - name: Run Trivy vulnerability scanner
       uses: aquasecurity/trivy-action@master
       with:
-        image-ref: '${{ steps.login-ecr.outputs.registry }}/${{ secrets.ECR_REPO_NAME }}:`$(echo ${GITHUB_SHA} | cut -c 1-7)`'
+        image-ref: '${{ steps.login-ecr.outputs.registry }}/${{ secrets.ECR_REPO_NAME }}:${GITHUB_SHA}'
+        # `$(echo ${GITHUB_SHA} | cut -c 1-7)`'
         format: 'table'
         ignore-unfixed: true
         vuln-type: 'os,library'
@@ -85,8 +86,8 @@ jobs:
         REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         REPOSITORY: ${{ secrets.ECR_REPO_NAME }}
       run: |
-        IMAGE_TAG=$(echo ${GITHUB_SHA} | cut -c 1-7)
-        docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
+        # IMAGE_TAG=$(echo ${GITHUB_SHA} | cut -c 1-7)
+        docker push $REGISTRY/$REPOSITORY:${GITHUB_SHA}
 
   deploy:
     runs-on: self-hosted
